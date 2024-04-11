@@ -1,0 +1,25 @@
+name: tensorflow-for-reranking
+
+# Just the standard TF published Docker images
+image: tensorflow/tensorflow:2.16.1-gpu
+
+# Priority levels
+scheduling:
+  priority: lowest
+  preemptible: true
+  retry_on_system_failure: true
+
+# Only need 1 node for this
+compute:
+  gpus: 8
+  cluster: r14z3
+
+# The repo I want to use
+- integration_type: git_repo
+  git_repo: cojennin/tensorflow-for-reranking
+  ssh_clone: true
+  git_branch: main
+  pip_install: -r requirements.txt # let's install the requirements.txt file out of the gate
+
+command: |
+  python 
