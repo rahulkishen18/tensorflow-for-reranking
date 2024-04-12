@@ -1,4 +1,4 @@
-## Launching TF jobs on MCLI
+## Launching TensorFlow jobs on MCLI
 
 This is a simple training workflow for training a neural reranker. It will:
 1. Automatically authenticate with GCP services based on credentials setup with MCLI
