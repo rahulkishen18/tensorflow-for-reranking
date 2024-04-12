@@ -10,7 +10,6 @@ import tensorflow_ranking as tfr
 from tensorflow_io.bigquery import BigQueryClient
 from tensorflow_io.bigquery import BigQueryReadSession
 from tensorflow.python.framework import dtypes
-import pdb
 
 # Uncomment for eager mode
 # tf.compat.v1.enable_eager_execution()
@@ -69,7 +68,9 @@ training_ds = read_bigquery("mslr_fold1")
 training_ds = training_ds.map(lambda feature_map: {
       "_mask": tf.ones_like(feature_map["label"], dtype=tf.bool),
       **feature_map,
-      "float_features": tf.reshape(feature_map["features_flattened"], [-1, 136]) # 136 is the original length of each row in the original tensor, easier to digest in BigQuery
+      "float_features": tf.reshape(feature_map["features_flattened"], [-1, 136]) 
+      # The original MSLR features was an N x 136 ndarray. To store it in BigQuery I flattened it to 1D
+      # We're just reshaping it back to N x 136
   }
 )
 training_ds = training_ds.shuffle(buffer_size=1000).padded_batch(batch_size=BATCH_SIZE)
