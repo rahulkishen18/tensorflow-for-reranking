@@ -41,6 +41,7 @@ dataset.location = "us"
 
 ##### STEP 2 #####################
 ##### Pull data from BigQuery ####
+# Note: I loaded Fold1 of the MSLR dataset into BigQuery
 ##################################
 def read_bigquery(table_name):
     tensorflow_io_bigquery_client = BigQueryClient()
