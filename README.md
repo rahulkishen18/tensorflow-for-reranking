@@ -19,7 +19,7 @@ mcli interactive {NUMBER OF HOURS FOR INTERACTIVE SESSION} --cluster {CLUSTER YO
 Then you can play around directly on the box to your hearts content.
 
 ### Provisioning environment for GCP authentication
-MCLI supports storing secure secrets per user, that are then injected into the users environment. Here I setup [GCP credentials](https://docs.mosaicml.com/projects/mcli/en/latest/resources/secrets/gcp.html) which are injected into the runtime in such a way that standard GCP Python libraries can use them to auto-authenticate. I know it says "GCP Storage", but this is a minsomer, it's for authenticating GCP in general.
+MCLI supports storing secure secrets per user, that are then injected into the users runtime during the lifecycle of the run. Here I setup [GCP credentials](https://docs.mosaicml.com/projects/mcli/en/latest/resources/secrets/gcp.html) which are injected into the runtime in such a way that standard GCP Python libraries can use them to auto-authenticate. I know it says "GCP Storage", but this is a minsomer, it's for authenticating GCP in general.
 
 ### Launching MCLI runs
 
