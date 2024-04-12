@@ -11,7 +11,7 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "env": {
-                "GCP_PROJECT_ID": "quiet-odyssey-420019"
+                "GCP_PROJECT_ID": "quiet-odyssey-420019" // This is my GCP Project! This will be injected by MCLI, but for now adding it here while I debug
             }
         }
     ]

@@ -103,22 +103,27 @@ class AsyncModelCheckpoint(tf.keras.callbacks.Callback):
 checkpoint_path = CHECKPOINT_PATH + "_{epoch:02d}"
 async_checkpoint_callback = AsyncModelCheckpoint(filepath=checkpoint_path)
 
-inputs = {"float_features": tf.keras.Input(shape=(None, 136), dtype=tf.float32)}
-norm_inputs = [tf.keras.layers.BatchNormalization()(x) for x in inputs.values()]
-x = tf.concat(norm_inputs, axis=-1)
-for layer_width in [128, 64, 32]:
-    x = tf.keras.layers.Dense(units=layer_width)(x)
-    x = tf.keras.layers.Activation(activation=tf.nn.relu)(x)
-scores = tf.squeeze(tf.keras.layers.Dense(units=1)(x), axis=-1)
-
 # Compile and train
-model = tf.keras.Model(inputs=inputs, outputs=scores)
-model.compile(
-    optimizer=tf.keras.optimizers.Adam(learning_rate=0.01),
-    loss=tfr.keras.losses.SoftmaxLoss(),
-    metrics=tfr.keras.metrics.get("ndcg", topn=5, name="NDCG@5"),
-)
-##### STEP 3 #####################
-##### Train model ####
-##################################
-model.fit(training_ds, epochs=3, callbacks=[async_checkpoint_callback])
+strategy = tf.distribute.MirroredStrategy()
+print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
+
+with strategy.scope():
+    inputs = {"float_features": tf.keras.Input(shape=(None, 136), dtype=tf.float32)}
+    norm_inputs = [tf.keras.layers.BatchNormalization()(x) for x in inputs.values()]
+    x = tf.concat(norm_inputs, axis=-1)
+    for layer_width in [128, 64, 32]:
+        x = tf.keras.layers.Dense(units=layer_width)(x)
+        x = tf.keras.layers.Activation(activation=tf.nn.relu)(x)
+    scores = tf.squeeze(tf.keras.layers.Dense(units=1)(x), axis=-1)
+
+
+    model = tf.keras.Model(inputs=inputs, outputs=scores)
+    model.compile(
+        optimizer=tf.keras.optimizers.Adam(learning_rate=0.01),
+        loss=tfr.keras.losses.SoftmaxLoss(),
+        metrics=tfr.keras.metrics.get("ndcg", topn=5, name="NDCG@5"),
+    )
+    ##### STEP 3 #####################
+    ##### Train model ####
+    ##################################
+    model.fit(training_ds, epochs=3, callbacks=[async_checkpoint_callback])

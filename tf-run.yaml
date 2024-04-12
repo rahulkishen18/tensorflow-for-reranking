@@ -1,7 +1,7 @@
 name: tensorflow-for-reranking
 
 # Just the standard TF published Docker images
-image: tensorflow/tensorflow:2.16.1-gpu
+image: cojennin/tensorflow-mcli:1.0.0
 
 # Priority levels
 scheduling:
@@ -12,7 +12,7 @@ scheduling:
 # Only need 1 node for this
 compute:
   gpus: 8
-  cluster: r14z3
+  cluster: r15z1p1
 
 # This will be automatically cloned at the start of every run
 integrations:

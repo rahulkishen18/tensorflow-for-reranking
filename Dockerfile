@@ -1,5 +1,5 @@
 # Use the official TensorFlow image as a parent image
-FROM tensorflow/tensorflow:2.15.1
+FROM tensorflow/tensorflow:2.15.0-gpu
 
 # Set the working directory
 WORKDIR /app
