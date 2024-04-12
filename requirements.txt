@@ -1,4 +1,8 @@
 fastavro==1.9.4
 tensorflow-io==0.36.0
-tensorflow==2.16.1 # this is the same version as the docker image, could also leave it unpinned if you just want to use the docker version
+tensorflow==2.15.1 # this is the same version as the docker image, could also leave it unpinned if you just want to use the docker version
 google-cloud-bigquery-storage==2.24.0
+google-cloud-bigquery==3.20.1
+google-cloud==0.34.0
+tensorflow-datasets==4.9.4
+tensorflow_ranking==0.5.5

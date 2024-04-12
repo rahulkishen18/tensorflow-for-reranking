@@ -22,4 +22,4 @@ compute:
   pip_install: -r requirements.txt # let's install the requirements.txt file out of the gate
 
 command: |
-  python 
+  python main.py # Run our training script!
