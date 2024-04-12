@@ -14,12 +14,13 @@ compute:
   gpus: 8
   cluster: r14z3
 
-# The repo I want to use
-- integration_type: git_repo
-  git_repo: cojennin/tensorflow-for-reranking
-  ssh_clone: true
-  git_branch: main
-  pip_install: -r requirements.txt # let's install the requirements.txt file out of the gate
+# This will be automatically cloned at the start of every run
+integrations:
+  - integration_type: git_repo
+    git_repo: cojennin/tensorflow-for-reranking
+    ssh_clone: true
+    git_branch: main
+    pip_install: -r requirements.txt # let's install the requirements.txt file out of the gate
 
 command: |
   python main.py # Run our training script!
