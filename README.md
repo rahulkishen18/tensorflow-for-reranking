@@ -7,7 +7,7 @@ This is a simple training workflow for training a neural reranker. It will:
 4. Train a simple neural reranker
 
 ### Some Background
-I spent most of the time wrangling with GCP services, mainly BigQuery. I'm not super familiar with the ins and outs of BigQuery, so wrangling the storing of features was most of the time.
+I spent most of the time wrangling with GCP services, mainly BigQuery. I'm not super familiar with the ins and outs of BigQuery, so futzing around with how to save the numpy features took a minute.
 
 A nice benefit of MCLI is you can "ssh" (not exactly ssh protocol, but effectively exactly the same idea) onto a node and debug directly. I setup a Remote VS Code session on the node, clone down the repo and do some debugging there.
 
