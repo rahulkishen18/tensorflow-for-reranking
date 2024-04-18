@@ -1,0 +1,46 @@
+name: etsy-mosaicml-test
+image: us-central1-docker.pkg.dev/etsy-mlinfra-dev/mosaic/neural_ir:0.8.26
+scheduling:
+  priority: medium
+  max_retries: 0
+  preemptible: true
+  retry_on_system_failure: true
+compute:
+  gpus: 8
+  cluster: r7z2
+command: |-
+  pip install PyYAML
+  export CUDA_VISIBLE_DEVICES=0
+  curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-471.0.0-linux-x86_64.tar.gz
+  tar -xf google-cloud-cli-471.0.0-linux-x86_64.tar.gz
+  ./google-cloud-sdk/install.sh
+  source /neural_ir/google-cloud-sdk/path.bash.inc
+  echo $GC_ACCESS_TOKEN > access_token.json
+  gcloud storage cp --recursive --access-token-file=access_token.json gs://etsy-mlinfra-dev-mosaic-test/input_dir .
+  rm access_token.json
+  export ARGS=$(python -c "import yaml, sys; print(' '.join(f'--{k} {v}' for k, v in yaml.safe_load(open(sys.argv[1])).items()))" /mnt/config/parameters.yaml)
+  python3 -m neural_ir.train $ARGS --loss-reweight-filter-topk IN_BATCH_NEG 2 --loss-reweight-filter-topk HARD_NEG 2
+  sleep infinity # This way we can ssh into the instance if there's a problem above
+parameters:
+  embedding-dim: 256
+  num-epochs: 4
+  hidden-layer-sizes: 8192,256
+  loss-arg-no-event: 0.162
+  loss-arg-click: 0.373
+  loss-arg-fav: 0.482
+  loss-arg-cart-add: 0.4
+  loss-arg-purchase: 0.78
+  exclude-feature: (recent_user_taxo_views).*|.*bucket|listingId|attribute.*
+  metric-to-export: val_topk_10_sort_all val10
+  positive-batch-size: 1536
+  negative-batch-size: 8192
+  learning-rate: 0.0001
+  loss-reweight-ratio: RANDOM_NEG 2048
+  loss-reweight-random-hard-interp-schedule: 1.0 10000 480000
+  megaminer-hard-negatives-per-query: 1
+  megaminer-keep-n-random-negatives: 4096
+  token-composition-grouping: TAXO_TEXT_HQI_OTHER
+  no-learning-token-group: hqi
+  shop-embedding-dim: 20
+  input-path: input_dir
+  job-dir: .
